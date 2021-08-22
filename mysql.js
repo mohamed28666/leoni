@@ -5,7 +5,7 @@ var express = require('express');
 var app = express();
 app.set('port', process.env.PORT || 3333);
 app.listen(app.get('port'), function () {
-  console.log('Express started on https://backend28.herokuapp.com:' +
+  console.log('Express started on https://leoni.com:' +
     app.get('port') + '; press Ctrl-C to terminate.');
 });
 
