@@ -24,7 +24,7 @@ var con = mysql.createConnection({
 
 
 
-app.get('/:line_number/:state/:RT_RATIO/:START_TIME', (req, res) => {
+app.get('/:line_number/:state/:RT_RATIO/:START_TIM', (req, res) => {
   line_state= req.params;
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.type('text/plain');
