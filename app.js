@@ -15,6 +15,8 @@ process.env.TOKEN_SECRET;
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
+
+
 function generateAccessToken(username) {
   return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '24h' });
 }
