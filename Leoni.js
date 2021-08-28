@@ -32,6 +32,8 @@ app.get('/:line_number/:state/:RT_RATIO/:START_TIM', (req, res) => {
   
   res.send(line_state);
 });
+
+
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
@@ -51,4 +53,32 @@ app.post('/:line_number/:state/:RT_RATIO/:START_TIME', function (req, res) {
   res.send(line_state);
   
 
+});
+
+
+
+app.get('/apperance', (req, res) => {
+  con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "config"
+  });
+
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("SELECT * FROM appearance", function (err, result, fields) {
+      if (err) throw err;
+      res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.type('text/plain');
+      res.send(result)
+      
+    });
+  });
+ 
 });
