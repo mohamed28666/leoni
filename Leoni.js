@@ -9,12 +9,7 @@ app.listen(app.get('port'), function () {
     app.get('port') + '; press Ctrl-C to terminate.');
 });
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "leoni_lines"
-});
+
 
 
 
@@ -25,60 +20,81 @@ var con = mysql.createConnection({
 
 
 app.get('/:line_number/:state/:RT_RATIO/:START_TIM', (req, res) => {
-  line_state= req.params;
+  line_state = req.params;
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.type('text/plain');
   console.log(req.params);
-  
+
   res.send(line_state);
 });
 
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  con.query("SELECT * FROM MH1", function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-  });
-});
+
 
 
 app.post('/:line_number/:state/:RT_RATIO/:START_TIME', function (req, res) {
-  line_state= req.params;
+  line_state = req.params;
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.type('text/plain');
   console.log(req.params);
-  
+
   res.send(line_state);
-  
+
 
 });
 
+app.get('/lines', (req, res) => {
+  
+  con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "leoni_lines"
+  });
+   
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("SELECT LINE_NUMBER FROM MH1 where DISPLAY_LINE=1", function (err, result, fields) {
+      if (err) throw err;
+      res.setHeader("Access-Control-Allow-Origin", "*")
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Max-Age", "1800");
+      res.setHeader("Access-Control-Allow-Headers", "content-type");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.type('text/plain');
+      res.send(result)
 
+    });
+  });
+  
+ 
+
+});
 
 app.get('/apperance', (req, res) => {
   con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "config"
+    database: "leoni_lines"
   });
 
-  con.connect(function(err) {
+  con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
     con.query("SELECT * FROM appearance", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Max-Age", "1800");
-  res.setHeader("Access-Control-Allow-Headers", "content-type");
-  res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Max-Age", "1800");
+      res.setHeader("Access-Control-Allow-Headers", "content-type");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
       res.type('text/plain');
       res.send(result)
-      
+
     });
   });
- 
+
 });
+
