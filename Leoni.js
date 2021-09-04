@@ -55,7 +55,7 @@ app.get('/lines', (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query("SELECT LINE_NUMBER FROM MH1 where DISPLAY_LINE=1", function (err, result, fields) {
+    con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION FROM MH1 where DISPLAY_LINE=1", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.setHeader("Access-Control-Allow-Credentials", "true");
