@@ -43,7 +43,7 @@ app.post('/:line_number/:state/:RT_RATIO/:START_TIME', function (req, res) {
 
 });
 
-app.get('/lines', (req, res) => {
+app.get('/mh1', (req, res) => {
   
   con = mysql.createConnection({
     host: "localhost",
@@ -71,7 +71,34 @@ app.get('/lines', (req, res) => {
  
 
 });
+app.get('/MH2', (req, res) => {
+  
+  con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "leoni_lines"
+  });
+   
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION FROM MH2 where DISPLAY_LINE=1", function (err, result, fields) {
+      if (err) throw err;
+      res.setHeader("Access-Control-Allow-Origin", "*")
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Max-Age", "1800");
+      res.setHeader("Access-Control-Allow-Headers", "content-type");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.type('text/plain');
+      res.send(result)
 
+    });
+  });
+  
+ 
+
+});
 app.get('/apperance', (req, res) => {
   con = mysql.createConnection({
     host: "localhost",
