@@ -19,13 +19,63 @@ app.listen(app.get('port'), function () {
 
 
 
-app.get('/:line_number/:state/:RT_RATIO/:START_TIM', (req, res) => {
-  line_state = req.params;
-  res.setHeader("Access-Control-Allow-Origin", "*")
-  res.type('text/plain');
-  console.log(req.params);
+app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 
-  res.send(line_state);
+
+  con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "leoni_lines"
+  });
+
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh1`.`V-Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
+      if (err) throw err;
+      res.setHeader("Access-Control-Allow-Origin", "*")
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Max-Age", "1800");
+      res.setHeader("Access-Control-Allow-Headers", "content-type");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.type('text/plain');
+      res.send(result)
+
+    });
+  });
+
+  
+
+});
+app.get('/mh2/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
+
+
+  con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "leoni_lines"
+  });
+
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh1`.`V-Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
+      if (err) throw err;
+      res.setHeader("Access-Control-Allow-Origin", "*")
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Max-Age", "1800");
+      res.setHeader("Access-Control-Allow-Headers", "content-type");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.type('text/plain');
+      res.send(result)
+
+    });
+  });
+
+  
+
 });
 
 
