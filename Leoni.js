@@ -32,7 +32,7 @@ app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh1`.`V-Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
+    con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh1`.`V_Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -45,9 +45,9 @@ app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
     });
   });
 
-  
+ });
 
-});
+
 app.get('/mh2/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 
 
@@ -61,7 +61,7 @@ app.get('/mh2/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh1`.`V-Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
+    con.query("UPDATE `mh2` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh2`.`V_Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -105,7 +105,7 @@ app.get('/mh1', (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION FROM MH1 where DISPLAY_LINE=1", function (err, result, fields) {
+    con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION,V_Type FROM MH1 where DISPLAY_LINE=1", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -133,7 +133,7 @@ app.get('/MH2', (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION FROM MH2 where DISPLAY_LINE=1", function (err, result, fields) {
+    con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION,V_Type FROM MH2 where DISPLAY_LINE=1", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -149,7 +149,7 @@ app.get('/MH2', (req, res) => {
  
 
 });
-app.get('/apperance', (req, res) => {
+ app.get('/apperance', (req, res) => {
   con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -174,4 +174,28 @@ app.get('/apperance', (req, res) => {
   });
 
 });
+app.get('/Vordawagen_state/:V_type', (req, res) => {
+  
+  con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "leoni_lines"
+  });
+   
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("SELECT DISPLAY_LINE FROM MH1 where V_type like'%"+req.params.V_type+"%'", function (err, result, fields) {
+      if (err) throw err;
+      res.setHeader("Access-Control-Allow-Origin", "*")
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Max-Age", "1800");
+      res.setHeader("Access-Control-Allow-Headers", "content-type");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.type('text/plain');
+      res.send(result)
+
+    });
+  });});
 
