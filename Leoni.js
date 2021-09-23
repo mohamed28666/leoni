@@ -19,7 +19,7 @@ app.listen(app.get('port'), function () {
 
 
 
-app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
+app.get('/mh1/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 
 
   con = mysql.createConnection({
@@ -32,7 +32,7 @@ app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh1`.`V_Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
+    con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE (`mh1`.`V_Type` like '%"+req.params.V_type+"%' and `mh1`.`Segment` like '%"+req.params.segment+"%')", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -48,7 +48,7 @@ app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
  });
 
 
-app.get('/mh2/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
+app.get('/mh2/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 
 
   con = mysql.createConnection({
@@ -61,7 +61,7 @@ app.get('/mh2/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
   con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query("UPDATE `mh2` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE `mh2`.`V_Type` like '%"+req.params.V_type+"%'", function (err, result, fields) {
+    con.query("UPDATE `mh2` SET `DISPLAY_LINE` = '"+req.params.state+"' WHERE (`mh2`.`V_Type` like '%"+req.params.V_type+"%' and `mh2`.`Segment` like '%"+req.params.segment+"%')", function (err, result, fields) {
       if (err) throw err;
       res.setHeader("Access-Control-Allow-Origin", "*")
       res.setHeader("Access-Control-Allow-Credentials", "true");

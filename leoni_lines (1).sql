@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 19 sep. 2021 à 18:45
+-- Généré le : jeu. 23 sep. 2021 à 20:15
 -- Version du serveur : 10.4.20-MariaDB
 -- Version de PHP : 7.3.29
 
@@ -55,6 +55,7 @@ INSERT INTO `appearance` (`image`, `time`, `ID`, `alter`) VALUES
 
 CREATE TABLE `mh1` (
   `LINE_NUMBER` text NOT NULL,
+  `Segment` varchar(100) DEFAULT NULL,
   `STATE` int(1) NOT NULL,
   `RT_RATIO` float NOT NULL,
   `START_TIME` datetime NOT NULL,
@@ -62,22 +63,22 @@ CREATE TABLE `mh1` (
   `D_DURATION` time NOT NULL,
   `DISPLAY_LINE` tinyint(1) NOT NULL,
   `Date` datetime DEFAULT current_timestamp(),
-  `V-Type` varchar(100) DEFAULT NULL
+  `V_Type` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `mh1`
 --
 
-INSERT INTO `mh1` (`LINE_NUMBER`, `STATE`, `RT_RATIO`, `START_TIME`, `A_DURATION`, `D_DURATION`, `DISPLAY_LINE`, `Date`, `V-Type`) VALUES
-('VW-L1', 0, 0, '2021-08-22 22:28:19', '44:28:19', '22:50:34', 0, '2021-09-05 03:15:55', 'Audi'),
-('VW-L2', 1, 10, '2021-08-30 00:10:07', '44:28:19', '65:50:34', 0, '2021-09-05 03:15:55', 'Seat,Audi'),
-('VW-L3', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 0, '2021-09-05 03:15:55', 'Neo'),
-('VW-L4', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 0, '2021-09-05 03:15:55', 'Audi'),
-('VW-L5', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('VW-L6', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('VW-L7', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('VW-L8', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve');
+INSERT INTO `mh1` (`LINE_NUMBER`, `Segment`, `STATE`, `RT_RATIO`, `START_TIME`, `A_DURATION`, `D_DURATION`, `DISPLAY_LINE`, `Date`, `V_Type`) VALUES
+('VW-L1', 'VorderWagen', 0, 0, '2021-08-22 22:28:19', '44:28:19', '22:50:34', 1, '2021-09-05 03:15:55', 'Audi'),
+('VW-L2', 'VorderWagen', 1, 10, '2021-08-30 00:10:07', '44:28:19', '65:50:34', 1, '2021-09-05 03:15:55', 'Seat,Audi'),
+('VW-L3', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Neo'),
+('VW-L4', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Audi'),
+('VW-L5', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
+('VW-L6', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
+('VW-L7', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
+('VW-L8', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve');
 
 -- --------------------------------------------------------
 
@@ -93,22 +94,23 @@ CREATE TABLE `mh2` (
   `A_DURATION` time NOT NULL,
   `D_DURATION` time NOT NULL,
   `DISPLAY_LINE` tinyint(1) NOT NULL,
-  `V-Type` varchar(100) DEFAULT NULL
+  `V_Type` varchar(100) DEFAULT NULL,
+  `Segment` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `mh2`
 --
 
-INSERT INTO `mh2` (`LINE_NUMBER`, `STATE`, `RT_RATIO`, `START_TIME`, `A_DURATION`, `D_DURATION`, `DISPLAY_LINE`, `V-Type`) VALUES
-('INR-L1', 0, 0, '2021-08-22 22:28:19', '44:28:19', '22:50:34', 1, 'Audi'),
-('INR-L2', 1, 10, '2021-08-10 00:10:07', '44:28:19', '65:50:34', 1, 'Neo'),
-('INR-L3', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 0, 'Assuve'),
-('INR-L4', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Seat'),
-('INR-L5', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 0, 'Audi'),
-('INR-L6', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Audi,Assuve'),
-('INR-L7', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Audi,Neo'),
-('INR-L8', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Assuve,');
+INSERT INTO `mh2` (`LINE_NUMBER`, `STATE`, `RT_RATIO`, `START_TIME`, `A_DURATION`, `D_DURATION`, `DISPLAY_LINE`, `V_Type`, `Segment`) VALUES
+('INR-L1', 0, 0, '2021-08-22 22:28:19', '44:28:19', '22:50:34', 1, 'Audi', 'InnenRaum'),
+('INR-L2', 1, 10, '2021-08-10 00:10:07', '44:28:19', '65:50:34', 1, 'Neo', 'InnenRaum'),
+('INR-L3', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Assuve', 'InnenRaum'),
+('INR-L4', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Seat', 'InnenRaum'),
+('INR-L5', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Audi', 'InnenRaum'),
+('INR-L6', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Audi,Assuve', 'InnenRaum'),
+('INR-L7', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Audi,Neo', 'InnenRaum'),
+('INR-L8', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, 'Assuve', 'InnenRaum');
 
 --
 -- Index pour les tables déchargées
