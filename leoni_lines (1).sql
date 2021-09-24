@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 24 sep. 2021 à 17:48
+-- Généré le : ven. 24 sep. 2021 à 19:55
 -- Version du serveur : 10.4.20-MariaDB
 -- Version de PHP : 7.3.29
 
@@ -50,6 +50,24 @@ INSERT INTO `appearance` (`image`, `time`, `ID`, `alter`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `logs`
+--
+
+CREATE TABLE `logs` (
+  `Line_number` varchar(100) NOT NULL,
+  `A_duration` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `logs`
+--
+
+INSERT INTO `logs` (`Line_number`, `A_duration`) VALUES
+('VW-L1', '535:11:29');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `mh1`
 --
 
@@ -62,33 +80,42 @@ CREATE TABLE `mh1` (
   `A_DURATION` time NOT NULL,
   `D_DURATION` time NOT NULL,
   `DISPLAY_LINE` tinyint(1) NOT NULL,
-  `Date` datetime DEFAULT current_timestamp(),
-  `V_Type` varchar(100) DEFAULT NULL
+  `V_Type` varchar(100) DEFAULT NULL,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `mh1`
 --
 
-INSERT INTO `mh1` (`LINE_NUMBER`, `Segment`, `STATE`, `RT_RATIO`, `START_TIME`, `A_DURATION`, `D_DURATION`, `DISPLAY_LINE`, `Date`, `V_Type`) VALUES
-('DO-L1', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-24 17:45:52', 'Neo'),
-('DO-L10', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Neo'),
-('DO-L11', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-24 00:00:00', 'Neo'),
-('DO-L2', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('DO-L3', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('DO-L4', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Audi'),
-('FAH-L1', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('FAH-L2', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve,Seat'),
-('FAH-L3', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('FAH-L4', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('VW-L1', 'VorderWagen', 0, 0, '2021-08-22 22:28:19', '44:28:19', '22:50:34', 1, '2021-09-05 03:15:55', 'Audi'),
-('VW-L2', 'VorderWagen', 1, 10, '2021-08-30 00:10:07', '44:28:19', '65:50:34', 1, '2021-09-05 03:15:55', 'Seat,Audi'),
-('VW-L3', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Neo'),
-('VW-L4', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Audi'),
-('VW-L5', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('VW-L6', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('VW-L7', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve'),
-('VW-L8', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:24:54', '47:10:54', 1, '2021-09-05 03:15:55', 'Assuve');
+INSERT INTO `mh1` (`LINE_NUMBER`, `Segment`, `STATE`, `RT_RATIO`, `START_TIME`, `A_DURATION`, `D_DURATION`, `DISPLAY_LINE`, `V_Type`, `Created`) VALUES
+('DO-L1', 'Doors', 1, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Neo', '2021-09-24 17:27:58'),
+('DO-L10', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Neo', '2021-09-24 17:27:58'),
+('DO-L11', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Neo', '2021-09-24 17:27:58'),
+('DO-L2', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('DO-L3', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('DO-L4', 'Doors', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Audi', '2021-09-24 17:27:58'),
+('FAH-L1', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('FAH-L2', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve,Seat', '2021-09-24 17:27:58'),
+('FAH-L3', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('FAH-L4', 'FahrWerk', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('VW-L1', 'VorderWagen', 1, 0, '2021-08-22 22:28:19', '23:00:00', '18:00:00', 1, 'Audi', '2021-09-24 17:53:17'),
+('VW-L2', 'VorderWagen', 1, 10, '2021-08-30 00:10:07', '23:00:00', '21:00:00', 1, 'Seat,Audi', '2021-09-24 17:49:19'),
+('VW-L3', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Neo', '2021-09-24 17:27:58'),
+('VW-L4', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Audi', '2021-09-24 17:27:58'),
+('VW-L5', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('VW-L6', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('VW-L7', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58'),
+('VW-L8', 'VorderWagen', 2, 66, '2021-08-30 00:10:54', '00:00:00', '00:00:00', 1, 'Assuve', '2021-09-24 17:27:58');
+
+--
+-- Déclencheurs `mh1`
+--
+DELIMITER $$
+CREATE TRIGGER `adding` AFTER UPDATE ON `mh1` FOR EACH ROW UPDATE `logs` SET `A_duration` =ADDTIME( `A_duration`, (SELECT A_DURATION from mh1 where LINE_NUMBER like '%VW-L1%'))
+ WHERE `logs`.`Line_number` = 'VW-L1'
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -134,6 +161,12 @@ ALTER TABLE `appearance`
   ADD PRIMARY KEY (`ID`(2));
 
 --
+-- Index pour la table `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`Line_number`);
+
+--
 -- Index pour la table `mh1`
 --
 ALTER TABLE `mh1`
@@ -144,6 +177,16 @@ ALTER TABLE `mh1`
 --
 ALTER TABLE `mh2`
   ADD PRIMARY KEY (`LINE_NUMBER`(200));
+
+DELIMITER $$
+--
+-- Évènements
+--
+CREATE DEFINER=`root`@`localhost` EVENT `REMISEZERO` ON SCHEDULE EVERY 1 DAY STARTS '2021-09-24 19:27:58' ENDS '2021-09-30 00:16:58' ON COMPLETION PRESERVE ENABLE DO UPDATE `mh1` SET `A_DURATION` = '00:00:00' ,`D_DURATION`='00:00:00'$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `sommeA_Duration` ON SCHEDULE EVERY 1 DAY STARTS '2021-09-24 19:54:21' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `logs` SET `A_duration` =ADDTIME( `A_duration`, (SELECT A_DURATION from mh1 where LINE_NUMBER like '%VW-L1%'))$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
