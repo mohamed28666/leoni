@@ -316,7 +316,23 @@ function addTimes(startTime, endTime) {
   return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
 }
 
-app.get('/:line_number/:elapsed', (req, res) => {
+app.get('/arduino/:mh/:line_number/:elapsed/:starttime/:state/:Nbre_brettes', (req, res) => {
+
+
+  let ts = Date.now();
+
+  let date_ob = new Date(ts);
+  let hours = date_ob.getHours()
+hours = ("0" +hours).slice(-2);
+// current minutes
+let minutes = date_ob.getMinutes();
+minutes = ("0" +minutes).slice(-2);
+// current seconds
+let seconds = date_ob.getSeconds();
+   seconds = ("0" +seconds).slice(-2);
+  let month = date_ob.getMonth();
+
+  let year = date_ob.getFullYear();
 
   con = mysql.createConnection({
     host: "localhost",
@@ -329,14 +345,14 @@ app.get('/:line_number/:elapsed', (req, res) => {
    
 
     if (err) throw err;
-    console.log("Connected! /:line_number/:elapsed'");
-    con.query("SELECT A_DURATION from mh1 where `LINE_NUMBER` = '" + req.params.line_number + "'", function (err, result, fields) {
+    console.log("Connected! /arduino/:mh/:line_number/:elapsed/:starttime/:state/:N_brette'");
+    con.query("SELECT A_DURATION from `"+req.params.mh+"` where `LINE_NUMBER` = '" + req.params.line_number + "'", function (err, result, fields) {
       if (err) throw err;
 
  let old_activeduration
     let new_activeduration
-
-      res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Date",hours+":"+minutes+":"+seconds);
+      res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.setHeader("Access-Control-Max-Age", "1800");
       res.setHeader("Access-Control-Allow-Headers", "content-type");
@@ -347,7 +363,7 @@ app.get('/:line_number/:elapsed', (req, res) => {
 
       new_activeduration = addTimes(old_activeduration, msToTime(req.params.elapsed))
 
-      con.query("UPDATE `mh1` SET `A_DURATION` = '" + new_activeduration + "' WHERE `mh1`.`LINE_NUMBER` = '" + req.params.line_number + "'", function (err, result, fields) {
+      con.query("UPDATE `"+req.params.mh+"` SET `A_DURATION` = '" + new_activeduration + "',`RT_RATIO`='"+req.params.Nbre_brettes+"',`STATE`='"+req.params.state+"',`START_TIME`='"+req.params.starttime+ "' WHERE `"+req.params.mh+"`.`LINE_NUMBER` = '" + req.params.line_number + "'", function (err, result, fields) {
         if (err) throw err;
   
   
@@ -378,4 +394,36 @@ app.get('/:line_number/:elapsed', (req, res) => {
 
 });
 
+app.get('/time', (req, res) => {
 
+
+  
+  let ts = Date.now();
+
+  let date_ob = new Date(ts);
+  let hours = date_ob.getHours();
+
+// current minutes
+let minutes = date_ob.getMinutes();
+
+// current seconds
+let seconds = date_ob.getSeconds();
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  
+  // prints date & time in YYYY-MM-DD format
+  console.log(year + "-" + month + "-" + date);
+ 
+  
+      res.setHeader("Access-Control-Allow-Origin", "*")
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Max-Age", "1800");
+      res.setHeader("Access-Control-Allow-Headers", "content-type");
+      res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+      res.type('text/plain');
+      res.send(    hours +":"+minutes+":"+seconds+"  "+year + "-" + month + "-" + date)
+
+   
+     
+});

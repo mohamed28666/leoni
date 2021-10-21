@@ -15,7 +15,7 @@ byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
 //IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
-char server[] = "192.168.8.102"; 
+char server[] = "192.168.8.103"; 
 //char server[] = "www.google.com";    // name address for Google (using DNS)
 TaskHandle_t TASK_Incrimente_Handler,TASK_Test_Handler ;
 SemaphoreHandle_t  SxBinarySemaphore,RQUBinarySemaphore;
