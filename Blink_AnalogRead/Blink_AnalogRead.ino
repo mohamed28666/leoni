@@ -50,10 +50,19 @@ void setup() {
 
   lcd.init();
   lcd.clear();         
-  //lcd.backlight();  
-   lcd.noBacklight();
-  lcd.begin(20, 4);
 
+   //lcd.noBacklight();
+    lcd.begin(20, 4);
+  lcd.setCursor(7,0);
+    lcd.backlight();  
+    lcd.print("LEONI");
+      lcd.setCursor(3,1);
+    lcd.print("IT DEPARTEMENT");
+     lcd.setCursor(4,2);
+     lcd.print("MENZEL HAYET");
+ lcd.setCursor(0,3);
+ lcd.print("IP: 192, 168, 8, 99");
+     
   // Print a transitory message to the LCD.
  
   // initialize serial communication at 9600 bits per second:
@@ -81,13 +90,8 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
     ,  NULL
     ,  3  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &TASK_Incrimente_Handler );
-xTaskCreate(
-   LCD_CONTROLLER
-    ,  "LCD_CONTROLLER"   // A name N_Tourust for humans
-    ,  255  // This stack size can be checked & adjusted by reading the Stack Highwater
-    ,  NULL
-    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-    ,  &TASK_Test_Handler );
+  
+
 
   
   xTaskCreate(
@@ -95,7 +99,7 @@ xTaskCreate(
     ,  "Blink"   // A name just for humans
     ,  255  // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
-    ,  2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &blinkhandler );
 //     xTaskCreate(
 //  Starttime
@@ -112,8 +116,15 @@ xTaskCreate(
     ,  NULL
     ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &changestatehandler);
-
-   
+  delay(2000);
+    lcd.clear();    
+   xTaskCreate(
+   LCD_CONTROLLER
+    ,  "LCD_CONTROLLER"   // A name N_Tourust for humans
+    ,  255  // This stack size can be checked & adjusted by reading the Stack Highwater
+    ,  NULL
+    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  &TASK_Test_Handler );
 
 
 }//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -170,7 +181,7 @@ xSemaphoreTake(RQUBinarySemaphore, portMAX_DELAY);
   
 if (client.connect(server, 3333)) {
   
-    Serial.println("connected");
+    Serial.println("Request is being sent to host server (^_^)");
 //Serial.println(elapsed);
 
 
@@ -197,7 +208,7 @@ if (client.connect(server, 3333)) {
   }
   else {
     // kf you didn't get a connection to the server:
-    Serial.println("connection failed");
+    Serial.println("connection to server failed!!! (°_°)");
     Ethernet.begin(mac,ip);
      vTaskDelay(3000 / portTICK_PERIOD_MS);
     Serial.println(Ethernet.localIP());
@@ -215,7 +226,7 @@ if (client.connect(server, 3333)) {
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
     //Serial.println();
-    Serial.println("disconnecting.");
+    Serial.println("Disconnecting from server.");
     client.stop();
 
     // do nothing forevermore:
@@ -243,14 +254,13 @@ void TASK_Incrimente(void *pvParameters){
 
 
 N_Tour++;
-
-   Serial.println("interrupted");
+  
    //Serial.println(N_Tour);
 
 
     elapsed=millis()- start;
   //digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));  
-    Serial.println((String)elapsed +" numéro"+(String)N_Tour);
+   Serial.println("Magnetic DETECTED, ELAPSED TIME is "+(String)elapsed +", and NUMBER BRETTE OUT is "+(String)N_Tour);
      A_Duration=A_Duration+elapsed;
   
    start= millis();
@@ -272,7 +282,8 @@ unsigned long  limit=0;
   resumehere:
    // vTaskPrioritySet( changestatehandler,3 );
    limit= (millis()-start);
-// Serial.println(limit);  
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+ Serial.println("only "+(String)(120000-limit)+"ms and the assembly line will be set to PAUSED State");  
 
 if(limit>120000){
 
@@ -283,7 +294,7 @@ if(limit>120000){
  // Serial.println("*******yyy***********");
  // Serial.println(clientstatus);
   if (clientstatus) {
-    Serial.println("connected");
+    Serial.println("Request is being sent to host server (^_^)");
     client.println("GET /arduino/"+linenumber+"/"+0+"/"+Start_Time+"/"+state+"/"+(String)(N_Tour*mul_per_r)+" HTTP/1.1");
     client.println("Host: 192.168.8.102");
     client.println("Connection: close");
@@ -299,7 +310,7 @@ if(limit>120000){
   }
    else {
     // kf you didn't get a connection to the server:
-    Serial.println("connection failed");
+    Serial.println("connection to server failed!!! (°_°)");
     Ethernet.begin(mac,ip);
      vTaskDelay(3000 / portTICK_PERIOD_MS);
     Serial.println(Ethernet.localIP());
@@ -313,7 +324,7 @@ if(limit>120000){
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
     Serial.println();
-    Serial.println("disconnecting.");
+    Serial.println("Disconnecting from server.");
     client.stop();
 
     // do nothing forevermore:
