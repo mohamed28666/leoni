@@ -17,21 +17,21 @@ app.listen(app.get('port'), function () {
 //jwt begin
 
 
-
-
-
-app.get('/mh1/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
-
-
-  con = mysql.createConnection({
+con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
     database: "leoni_lines"
   });
 
-  con.connect(function (err) {
-    if (err) throw err;
+
+app.get('/mh1/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
+
+
+  
+
+
+    //if (err) throw err;
     console.log("Connected!");
     con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '" + req.params.state + "' WHERE (`mh1`.`V_Type` like '%" + req.params.V_type + "%' and `mh1`.`Segment` like '%" + req.params.segment + "%')", function (err, result, fields) {
       if (err) throw err;
@@ -44,7 +44,7 @@ app.get('/mh1/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, 
       res.send(result)
 
     });
-  });
+
 
 });
 
@@ -52,15 +52,10 @@ app.get('/mh1/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, 
 app.get('/mh2/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 
 
-  con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "leoni_lines"
-  });
 
-  con.connect(function (err) {
-    if (err) throw err;
+
+ 
+   // if (err) throw err;
     console.log("Connected!");
     con.query("UPDATE `mh2` SET `DISPLAY_LINE` = '" + req.params.state + "' WHERE (`mh2`.`V_Type` like '%" + req.params.V_type + "%' and `mh2`.`Segment` like '%" + req.params.segment + "%')", function (err, result, fields) {
       if (err) throw err;
@@ -73,7 +68,7 @@ app.get('/mh2/:line_number/:state/:segment/:RT_RATIO/:START_TIM/:V_type', (req, 
       res.send(result)
 
     });
-  });
+ 
 
 
 
@@ -96,15 +91,10 @@ app.post('/:line_number/:state/:RT_RATIO/:START_TIME', function (req, res) {
 
 app.get('/mh1', (req, res) => {
 
-  con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "leoni_lines"
-  });
+ 
 
-  con.connect(function (err) {
-    if (err) throw err;
+  
+    //if (err) throw err;
     console.log("Connected /mh1");
     con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION,V_Type FROM MH1 where DISPLAY_LINE=1", function (err, result, fields) {
       if (err) throw err;
@@ -117,22 +107,22 @@ app.get('/mh1', (req, res) => {
       res.send(result)
 
     });
-  });
+ 
 
 
 
 });
 app.get('/MH2', (req, res) => {
 
-  con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "leoni_lines"
-  });
+  //con = mysql.createConnection({
+   // host: "localhost",
+   // user: "root",
+  //  password: "",
+  //  database: "leoni_lines"
+//  });
 
-  con.connect(function (err) {
-    if (err) throw err;
+ 
+    //if (err) throw err;
     console.log("Connected mh2");
     con.query("SELECT LINE_NUMBER,RT_RATIO,STATE,START_TIME,A_DURATION,D_DURATION,V_Type FROM MH2 where DISPLAY_LINE=1", function (err, result, fields) {
       if (err) throw err;
@@ -145,21 +135,16 @@ app.get('/MH2', (req, res) => {
       res.send(result)
 
     });
-  });
+ 
 
 
 
 });
 app.get('/apperance', (req, res) => {
-  con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "leoni_lines"
-  });
+  
 
-  con.connect(function (err) {
-    if (err) throw err;
+ 
+   // if (err) throw err;
     console.log("Connected!");
     con.query("SELECT * FROM appearance", function (err, result, fields) {
       if (err) throw err;
@@ -172,20 +157,14 @@ app.get('/apperance', (req, res) => {
       res.send(result)
 
     });
-  });
+
 
 });
 app.get('/Vordawagen_state/:V_type', (req, res) => {
 
-  con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "leoni_lines"
-  });
-
-  con.connect(function (err) {
-    if (err) throw err;
+ 
+ 
+   // if (err) throw err;
     console.log("Connected /Vordawagen_state/:V_type'");
     con.query("SELECT DISPLAY_LINE FROM MH1 where V_type like'%" + req.params.V_type + "%'", function (err, result, fields) {
       if (err) throw err;
@@ -198,21 +177,16 @@ app.get('/Vordawagen_state/:V_type', (req, res) => {
       res.send(result)
 
     });
-  });
+
 });
 
 app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 
 
-  con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "leoni_lines"
-  });
+  
 
-  con.connect(function (err) {
-    if (err) throw err;
+ 
+   // if (err) throw err;
     console.log("Connected!");
     con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '" + req.params.state + "' WHERE `mh1`.`V_Type` like '%" + req.params.V_type + "%'", function (err, result, fields) {
       if (err) throw err;
@@ -225,7 +199,7 @@ app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
       res.send(result)
 
     });
-  });
+
 
 });
 
@@ -233,15 +207,10 @@ app.get('/mh1/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 app.get('/mh2/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
 
 
-  con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "leoni_lines"
-  });
+  
 
-  con.connect(function (err) {
-    if (err) throw err;
+  //con.connect(function (err) {
+    //if (err) throw err;
     console.log("Connected!");
     con.query("UPDATE `mh1` SET `DISPLAY_LINE` = '" + req.params.state + "' WHERE `mh1`.`V_Type` like '%" + req.params.V_type + "%'", function (err, result, fields) {
       if (err) throw err;
@@ -254,7 +223,7 @@ app.get('/mh2/:line_number/:state/:RT_RATIO/:START_TIM/:V_type', (req, res) => {
       res.send(result)
 
     });
-  });
+  //});
 
 });
 
@@ -341,10 +310,10 @@ let seconds = date_ob.getSeconds();
     database: "leoni_lines"
   });
 
-  con.connect(function (err) {
+ // con.connect(function (err) {
    
 
-    if (err) throw err;
+   // if (err) throw err;
     console.log("Connected! /arduino/:mh/:line_number/:elapsed/:starttime/:state/:N_brette'");
     con.query("SELECT A_DURATION from `"+req.params.mh+"` where `LINE_NUMBER` = '" + req.params.line_number + "'", function (err, result, fields) {
       if (err) throw err;
@@ -390,7 +359,7 @@ let seconds = date_ob.getSeconds();
     
 
 
-  });
+  //});
 
 });
 
