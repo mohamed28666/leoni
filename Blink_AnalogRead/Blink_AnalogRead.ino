@@ -230,7 +230,7 @@ void TaskBlink(void *pvParameters)  // This is a task.
 
 xSemaphoreTake(RQUBinarySemaphore, portMAX_DELAY);
  // Serial.println("connecting...");
-  
+ // client.connect(server, 3333);
 if (client.connect(server, 3333)) {
   
     Serial.println("Request is being sent to host server (^_^)");
@@ -243,10 +243,10 @@ if (client.connect(server, 3333)) {
     client.println("Host: 192.168.8.102");
     client.println("Connection: close");
     client.println();
-  while(client.available()==0){sending =1;};
+ // while(client.available()==0){sending =1;NULL;NULL;};
    
-  
-//  vTaskDelay(300 / portTICK_PERIOD_MS);
+  while(client.available()==0){vTaskDelay(300 / portTICK_PERIOD_MS);};
+
   
    
        while (client.available()) {
@@ -273,7 +273,7 @@ if (client.connect(server, 3333)) {
     Serial.println("connection to server failed!!! (°_°)");
     //Ethernet.begin(mac,ip);
   //   vTaskDelay(3000 / portTICK_PERIOD_MS);
-     client.connect(server, 3333);
+    
     Serial.println(Ethernet.localIP());
   
   }
