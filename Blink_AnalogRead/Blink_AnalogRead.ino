@@ -11,9 +11,12 @@ float diametre_pignon = 0.5;
 //***********************************************CONFIG*******************************************//
 //---just select segment and matched line number ------------------------------------------------//
 String linenumber="MH2/INR-L9";
-char server[] = "192.168.8.101";
+char server[] = "192.168.1.41";
 //--- specify ip address for the device---------------------------------------------------------//
-IPAddress ip(192, 168, 8, 99); 
+IPAddress ip(192, 168, 1, 156); 
+IPAddress ipdefault(0,0,0,0);
+IPAddress current(1,1,1,1);
+
 //***********************************************************************************************//
 String reponse="";
 String Start_Time ="00:00:00";
@@ -45,9 +48,8 @@ LiquidCrystal_I2C lcd(0x27,20,4);
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-  SxBinarySemaphore = xSemaphoreCreateBinary();
-  RQUBinarySemaphore= xSemaphoreCreateBinary();
-
+  
+   Serial.begin(115200);
   lcd.init();
   lcd.clear();         
 
@@ -61,16 +63,42 @@ void setup() {
      lcd.setCursor(4,2);
      lcd.print("MENZEL HAYET");
  lcd.setCursor(0,3);
- lcd.print("IP: 192, 168, 8, 99");
-     
+ lcd.print("SVR :"+(String)server);
+delay(2000);
+
+
+ SxBinarySemaphore = xSemaphoreCreateBinary();
+  RQUBinarySemaphore= xSemaphoreCreateBinary();
   // Print a transitory message to the LCD.
  
   // initialize serial communication at 9600 bits per second:
-   Serial.begin(115200);
 
-pinMode(LED_BUILTIN, OUTPUT);
- Ethernet.begin(mac,ip);
+lcd.clear();     
+lcd.setCursor(0,1);
+lcd.print("Identifying ip...");
+ 
+  initiate_cnx :
+ Ethernet.begin(mac);
  delay(1000);
+ Serial.println(Ethernet.localIP());
+ current =Ethernet.localIP();
+
+ if(Ethernet.localIP()==ipdefault){
+  goto initiate_cnx;
+ }   
+pinMode(LED_BUILTIN, OUTPUT);
+
+  Serial.println(Ethernet.localIP());
+Serial.println((String)Ethernet.localIP()=="0.0.0.0");
+
+ lcd.clear();  
+  lcd.setCursor(0,2);
+  lcd.print("IP:");
+  lcd.setCursor(4,2);
+lcd.print( Ethernet.localIP());
+delay(4000);
+ 
+ Serial.println(Ethernet.localIP());
 pinMode(sensor, INPUT);  
     //Serial.println(Ethernet.localIP());// set pin to input
 digitalWrite(sensor, HIGH);
@@ -99,7 +127,7 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
     ,  "Blink"   // A name just for humans
     ,  255  // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
-    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &blinkhandler );
 //     xTaskCreate(
 //  Starttime
@@ -209,7 +237,7 @@ if (client.connect(server, 3333)) {
   else {
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
-    Ethernet.begin(mac,ip);
+    //Ethernet.begin(mac,ip);
      vTaskDelay(3000 / portTICK_PERIOD_MS);
     Serial.println(Ethernet.localIP());
   
@@ -311,7 +339,7 @@ if(limit>120000){
    else {
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
-    Ethernet.begin(mac,ip);
+   // Ethernet.begin(mac,ip);
      vTaskDelay(3000 / portTICK_PERIOD_MS);
     Serial.println(Ethernet.localIP());
     //goto resumehere;
@@ -390,15 +418,16 @@ times = A_Duration;
     lcd.setCursor(10,01);
         lcd.print(Start_Time);
       //lcd.print((String)elapsed+"" );
-      
+
     lcd.setCursor(0,2);
    lcd.print("N_BRETTE: ")  ;
     lcd.setCursor(10,2);
    lcd.print(N_Tour);
  lcd.setCursor(0,3);
-   lcd.print("A_DURAT: ")  ;
-    lcd.setCursor(10,3);
-   lcd.print(A_TimeStamp);
+   lcd.print("IP:")  ;
+    lcd.setCursor(4,3);
+   //lcd.print(A_TimeStamp);
+  lcd.print( current);
      
    }    
  
