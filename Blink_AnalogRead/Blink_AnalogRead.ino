@@ -12,7 +12,7 @@ bool sending=0;
 //***********************************************CONFIG*******************************************//
 //---just select segment and matched line number ------------------------------------------------//
 String linenumber="MH2/INR-L9";
-char server[] = "192.168.1.41";
+const char server[] = "192.168.1.41";
 unsigned long heureRAZmin=8.1e+7,heureRAZmax=heureRAZmin+10000 ;//en millisecondes
 //--- specify ip address for the device---------------------------------------------------------//
 IPAddress ip(192, 168, 1, 156); 
@@ -96,6 +96,7 @@ lcd.print("Identifying ip...");
 initiate_cnx : 
 // Ethernet.maintain(); 
  Ethernet.begin(mac,ip);
+ delay(1000);
  Serial.println(Ethernet.localIP());
  current =Ethernet.localIP();
 
@@ -104,7 +105,7 @@ initiate_cnx :
  }   
 pinMode(LED_BUILTIN, OUTPUT);
 
-  Serial.println(Ethernet.localIP());
+  //Serial.println(Ethernet.localIP());
 Serial.println((String)Ethernet.localIP()=="0.0.0.0");
 
  lcd.clear();  
@@ -113,7 +114,7 @@ Serial.println((String)Ethernet.localIP()=="0.0.0.0");
   lcd.setCursor(4,2);
 lcd.print( Ethernet.localIP());
 delay(4000);
- 
+  lcd.clear(); 
  Serial.println(Ethernet.localIP());
 pinMode(sensor, INPUT);  
     //Serial.println(Ethernet.localIP());// set pin to input
@@ -151,7 +152,7 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
     ,  "Blink"   // A name just for humans
     ,  255  // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
-    , 2 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    , 2// Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &blinkhandler );
 //     xTaskCreate(
 //  Starttime
@@ -160,7 +161,7 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
 //    ,  NULL
 //    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
 //    ,  NULL );
-
+//
 xTaskCreate(
     changestate
     ,  "Blink"   // A name just for humans
@@ -168,8 +169,7 @@ xTaskCreate(
     ,  NULL
     ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &changestatehandler);
-  delay(2000);
-    lcd.clear();    
+ 
    xTaskCreate(
    LCD_CONTROLLER
     ,  "LCD_CONTROLLER"   // A name N_Tourust for humans
@@ -231,8 +231,9 @@ void TaskBlink(void *pvParameters)  // This is a task.
 xSemaphoreTake(RQUBinarySemaphore, portMAX_DELAY);
  // Serial.println("connecting...");
  // client.connect(server, 3333);
+
 if (client.connect(server, 3333)) {
-  
+ 
     Serial.println("Request is being sent to host server (^_^)");
 //Serial.println(elapsed);
 
@@ -244,10 +245,10 @@ if (client.connect(server, 3333)) {
     client.println("Connection: close");
     client.println();
  // while(client.available()==0){sending =1;NULL;NULL;};
-   
-  while(client.available()==0){vTaskDelay(300 / portTICK_PERIOD_MS);};
+   Serial.println(client.available());
+while(client.available()==0){Serial.println("stucked here 1111");};
 
-  
+ // vTaskDelay(300 / portTICK_PERIOD_MS);
    
        while (client.available()) {
      
@@ -261,8 +262,8 @@ if (client.connect(server, 3333)) {
     hours=timeSinceUpdate.substring(0,2).toInt();
     minutes=timeSinceUpdate.substring(3,5).toInt();
     millis_timeSincelastUpdate=((minutes*60000) +(hours*3.6*1000000));
-   Serial.println( millis_timeSincelastUpdate);
-    Serial.println(  timeSinceUpdate);
+   //Serial.println( millis_timeSincelastUpdate);
+  //  Serial.println(  timeSinceUpdate);
   if(Start_Time=="00:00:00"){
   Start_Time=reponse.substring(46,54);
   }
@@ -271,10 +272,7 @@ if (client.connect(server, 3333)) {
   else {
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
-    //Ethernet.begin(mac,ip);
-  //   vTaskDelay(3000 / portTICK_PERIOD_MS);
-    
-    Serial.println(Ethernet.localIP());
+    //Serial.println(Ethernet.localIP());
   
   }
     
@@ -345,13 +343,14 @@ unsigned long  limit=0;
   resumehere:
    // vTaskPrioritySet( changestatehandler,3 );
    limit= (millis()-start);
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
- Serial.println("only "+(String)(120000-limit)+"ms and the assembly line will be set to PAUSED State");  
+  vTaskDelay(10000 / portTICK_PERIOD_MS);
+ 
+ //Serial.println("only "+(String)(120000-limit)+"ms and the assembly line will be set to PAUSED State");  
  hours=timeSinceUpdate.substring(0,2).toInt();
     minutes=timeSinceUpdate.substring(3,5).toInt();
     millis_timeSincelastUpdate=((minutes*60000) +(hours*3.6*1000000));
-   Serial.println( "only "+ (String)(heureRAZmin -millis_timeSincelastUpdate-millis())+"s for starting shift 1/2");
-  
+   //Serial.println( "only "+ (String)(heureRAZmin -millis_timeSincelastUpdate-millis())+"s for starting shift 1/2");
+ 
   ////**************************** //
    if( (millis_timeSincelastUpdate+millis())>(heureRAZmin) and  (millis_timeSincelastUpdate+millis())<(heureRAZmax) ){///// to verify ///////
   
@@ -360,7 +359,7 @@ unsigned long  limit=0;
     
     }
 //*********************************************///
-    Serial.println(  timeSinceUpdate);
+   Serial.println(  timeSinceUpdate);
 if(limit>120000){
 
   vTaskSuspend(blinkhandler);
@@ -370,17 +369,18 @@ if(limit>120000){
  // Serial.println("*******yyy***********");
  // Serial.println(clientstatus);
   if (clientstatus) {
+
     Serial.println("Request is being sent to host server (^_^)");
     client.println("GET /arduino/"+linenumber+"/"+0+"/"+Start_Time+"/"+state+"/"+(String)(N_Tour*mul_per_r)+" HTTP/1.1");
     client.println("Host: 192.168.8.102");
     client.println("Connection: close");
     client.println();
 
-    while(client.available()==0){};
+ while(client.available()==0){Serial.println("stucked here");};
     while (client.available()) { 
     char c = client.read();
    // reponse = reponse+c;
-    Serial.print(c);  
+    //Serial.print(c);  
   }
   
   }
@@ -389,8 +389,8 @@ if(limit>120000){
     Serial.println("connection to server failed!!! (°_°)");
    // Ethernet.begin(mac,ip);
 
-     vTaskDelay(3000 / portTICK_PERIOD_MS);
-    Serial.println(Ethernet.localIP());
+  //   vTaskDelay(3000 / portTICK_PERIOD_MS);
+  //  Serial.println(Ethernet.localIP());
     //goto resumehere;
   
   }
@@ -442,7 +442,7 @@ int millisec , tseconds,tminutes,seconds,theure,Tminutes;
 String DisplayTime;
 char A_TimeStamp[100];
 
- lcd.createChar(0, customChar);
+// lcd.createChar(0, customChar);
   for(;;){
 
 times = A_Duration;
@@ -478,24 +478,24 @@ times = A_Duration;
    lcd.print("IP:")  ;
     lcd.setCursor(4,3);
    //lcd.print(A_TimeStamp);
-  lcd.print( current);
-     if (sending==1){
-       lcd.setCursor(20,2);
-   lcd.write((byte)0);
-      }
+ lcd.print( current);
+   //  if (sending==1){
+   //    lcd.setCursor(20,2);
+  // lcd.write((byte)0);
+  //    }
    }    
  
   
   }
-void remiseazero(void){
-  String hours,minutes;
-  for(;;){
-   // Serial.println(timeSinceUpdate);
-    hours=timeSinceUpdate.substring(0,2);
-    minutes=timeSinceUpdate.substring(3,5);
-     Serial.println(hours+'-'+minutes);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-  
-  }
+//void remiseazero(void){
+//  String hours,minutes;
+//  for(;;){
+//   // Serial.println(timeSinceUpdate);
+//    hours=timeSinceUpdate.substring(0,2);
+//    minutes=timeSinceUpdate.substring(3,5);
+//     Serial.println(hours+'-'+minutes);
+//    vTaskDelay(1000 / portTICK_PERIOD_MS);
+//    }
+//  
+//  }
   
