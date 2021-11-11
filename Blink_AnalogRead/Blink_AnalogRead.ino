@@ -96,7 +96,7 @@ lcd.print("Identifying ip...");
 initiate_cnx : 
 // Ethernet.maintain(); 
  Ethernet.begin(mac,ip);
- delay(1000);
+ delay(2000);
  Serial.println(Ethernet.localIP());
  current =Ethernet.localIP();
 
@@ -272,6 +272,7 @@ while(client.available()==0){Serial.println("stucked here 1111");};
   else {
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
+  //  Ethernet.begin(mac,ip);
     //Serial.println(Ethernet.localIP());
   
   }
@@ -387,7 +388,7 @@ if(limit>120000){
    else {
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
-   // Ethernet.begin(mac,ip);
+ // Ethernet.begin(mac,ip);
 
   //   vTaskDelay(3000 / portTICK_PERIOD_MS);
   //  Serial.println(Ethernet.localIP());
