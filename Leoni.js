@@ -370,10 +370,10 @@ app.get('/time', (req, res) => {
   let ts = Date.now();
 
   let date_ob = new Date(ts);
-  let hours = date_ob.getHours();
+  let hours = ("0"+date_ob.getHours()).slice(-2);;
 
 // current minutes
-let minutes = date_ob.getMinutes();
+let minutes = ("0"+date_ob.getMinutes()).slice(-2);;
 
 // current seconds
 let seconds = date_ob.getSeconds();

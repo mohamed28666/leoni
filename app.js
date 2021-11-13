@@ -146,11 +146,11 @@ app.post('/postDHT11/:Temperature/:Humidity', function (req, res) {
 });
 //for deployement END//
 
-app.get('/SU', function (req, res) {
+app.get('/time', function (req, res) {
  // res.setHeader('Access-Control-Allow-Origin', 'https://frontend288.herokuapp.com');
  res.setHeader("Access-Control-Allow-Origin", "*")
   res.type('text/plain');
-  res.send(R_state);
+  res.send("time request");
 });
 
 app.get('/:Relay', function (req, res) {

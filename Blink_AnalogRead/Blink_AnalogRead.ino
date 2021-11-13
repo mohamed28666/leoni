@@ -15,7 +15,11 @@ String linenumber="MH2/INR-L9";
 const char server[] = "192.168.1.41";
 unsigned long heureRAZmin=8.1e+7,heureRAZmax=heureRAZmin+10000 ;//en millisecondes
 //--- specify ip address for the device---------------------------------------------------------//
-IPAddress ip(192, 168, 1, 156); 
+IPAddress gateway(10,175,23,254);
+IPAddress DNS     (10,175,2,22);
+IPAddress subnet(255,255,248,0);
+
+IPAddress ip (192,168,1,56); 
 IPAddress ipdefault(0,0,0,0);
 IPAddress current(1,1,1,1);
 
@@ -49,11 +53,12 @@ byte customChar[8] = {
 
 EthernetClient client;
 
-// define two tasks for Blink & AnalogRead
+
 void TaskBlink( void *pvParameters );
 void TASK_Incrimente( void *pvParameters );
 void Starttime( void *pvParameters );
 void changestate(void *pvParameters);
+
 LiquidCrystal_I2C lcd(0x27,20,4);
 
 
@@ -95,8 +100,9 @@ lcd.print("Identifying ip...");
 
 initiate_cnx : 
 // Ethernet.maintain(); 
- Ethernet.begin(mac,ip);
- delay(2000);
+Ethernet.begin(mac, ip,DNS, gateway, subnet); 
+Ethernet.begin(mac, ip); 
+ delay(1000);
  Serial.println(Ethernet.localIP());
  current =Ethernet.localIP();
 
@@ -131,26 +137,26 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
   xTaskCreate(
    TASK_Incrimente
     ,  "TASK_Incrimente"   // A name N_Tourust for humans
-    ,  255  // This stack size can be checked & adN_Tourusted by reading the Stack Highwater
+    ,  500  // This stack size can be checked & adN_Tourusted by reading the Stack Highwater
     ,  NULL
     ,  3  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &TASK_Incrimente_Handler );
   
-// xTaskCreate(
-//  remiseazero
-//    ,  "TASK_remiseazero"   // A name N_Tourust for humans
-//    ,  255  // This stack size can be checked & adN_Tourusted by reading the Stack Highwater
-//    ,  NULL
-//    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-//    ,  NULL);
-//  
+ xTaskCreate(
+  remiseazero
+    ,  "TASK_remiseazero"   // A name N_Tourust for humans
+    ,  500  // This stack size can be checked & adN_Tourusted by reading the Stack Highwater
+    ,  NULL
+    , 2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  NULL);
+  
 
 
   
   xTaskCreate(
     TaskBlink
     ,  "Blink"   // A name just for humans
-    ,  255  // This stack size can be checked & adjusted by reading the Stack Highwater
+    ,  500  // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
     , 2// Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &blinkhandler );
@@ -167,15 +173,15 @@ xTaskCreate(
     ,  "Blink"   // A name just for humans
     ,  500  // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
-    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &changestatehandler);
  
    xTaskCreate(
    LCD_CONTROLLER
     ,  "LCD_CONTROLLER"   // A name N_Tourust for humans
-    ,  255  // This stack size can be checked & adjusted by reading the Stack Highwater
+    ,  500  // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
-    ,  1  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  2 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &TASK_Test_Handler );
 
 
@@ -246,9 +252,9 @@ if (client.connect(server, 3333)) {
     client.println();
  // while(client.available()==0){sending =1;NULL;NULL;};
    Serial.println(client.available());
-while(client.available()==0){Serial.println("stucked here 1111");};
+//while(client.available()==0){Serial.println("stucked here 1111");};
 
- // vTaskDelay(300 / portTICK_PERIOD_MS);
+delay(200);
    
        while (client.available()) {
      
@@ -272,7 +278,6 @@ while(client.available()==0){Serial.println("stucked here 1111");};
   else {
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
-  //  Ethernet.begin(mac,ip);
     //Serial.println(Ethernet.localIP());
   
   }
@@ -310,7 +315,6 @@ void TASK_Incrimente(void *pvParameters){
 
 
   for(;;){
-    //xSemaphoreTake(xSemaphore, -1);
     
     xSemaphoreTake(SxBinarySemaphore, portMAX_DELAY);
 
@@ -327,6 +331,7 @@ N_Tour++;
   
    start= millis();
   xSemaphoreGive( RQUBinarySemaphore);
+ 
    }    
  
   
@@ -353,15 +358,15 @@ unsigned long  limit=0;
    //Serial.println( "only "+ (String)(heureRAZmin -millis_timeSincelastUpdate-millis())+"s for starting shift 1/2");
  
   ////**************************** //
-   if( (millis_timeSincelastUpdate+millis())>(heureRAZmin) and  (millis_timeSincelastUpdate+millis())<(heureRAZmax) ){///// to verify ///////
-  
-    N_Tour=0;
-    Start_Time ="00:00:00";
-    
-    }
+//   if( (millis_timeSincelastUpdate+millis())>(heureRAZmin) and  (millis_timeSincelastUpdate+millis())<(heureRAZmax) ){///// to verify ///////
+//  
+//    N_Tour=0;
+//    Start_Time ="00:00:00";
+//    
+//    }
 //*********************************************///
-   Serial.println(  timeSinceUpdate);
-if(limit>120000){
+  // Serial.println(  timeSinceUpdate);
+if((limit>120000)&(N_Tour>0)){
 
   vTaskSuspend(blinkhandler);
 
@@ -377,7 +382,8 @@ if(limit>120000){
     client.println("Connection: close");
     client.println();
 
- while(client.available()==0){Serial.println("stucked here");};
+// while(client.available()==0){Serial.println("stucked here");};
+delay(200);
     while (client.available()) { 
     char c = client.read();
    // reponse = reponse+c;
@@ -388,7 +394,7 @@ if(limit>120000){
    else {
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
- // Ethernet.begin(mac,ip);
+   // Ethernet.begin(mac,ip);
 
   //   vTaskDelay(3000 / portTICK_PERIOD_MS);
   //  Serial.println(Ethernet.localIP());
@@ -445,7 +451,7 @@ char A_TimeStamp[100];
 
 // lcd.createChar(0, customChar);
   for(;;){
-
+vTaskDelay(200);
 times = A_Duration;
   millisec  = times % 1000;
   tseconds = times/1000;//
@@ -488,15 +494,68 @@ times = A_Duration;
  
   
   }
-//void remiseazero(void){
-//  String hours,minutes;
-//  for(;;){
-//   // Serial.println(timeSinceUpdate);
-//    hours=timeSinceUpdate.substring(0,2);
-//    minutes=timeSinceUpdate.substring(3,5);
-//     Serial.println(hours+'-'+minutes);
-//    vTaskDelay(1000 / portTICK_PERIOD_MS);
-//    }
-//  
-//  }
+
+
   
+void remiseazero(void){
+  String timeS;
+ for(;;){
+  if(N_Tour==0){start=millis();
+    Serial.println("start=millis()");}
+delay(30000);
+vTaskSuspend(blinkhandler);
+if (client.connect(server, 3333)) {
+ 
+    Serial.println("Request is being sent to host server (^_^)");
+//Serial.println(elapsed);
+
+
+   
+     client.println("GET /time HTTP/1.1");
+   // client.println("GET /search?q=arduino HTTP/1.1");
+    client.println("Host: 192.168.8.102");
+    client.println("Connection: close");
+    client.println();
+ // while(client.available()==0){sending =1;NULL;NULL;};
+   Serial.println(client.available());
+//while(client.available()==0){Serial.println("RAZ task executing");};
+
+Serial.println("RAZ task executing");
+delay(80);
+   
+       while (client.available()) {
+     
+    char c = client.read();
+    reponse = reponse+c;
+   //Serial.print(c);
+    
+  }
+ 
+   timeS=reponse.substring(417,422);
+  Serial.println(timeS);
+  if((timeS=="14:00")|(timeS=="14:01")|(timeS=="02:30") |(timeS=="02:31")){ //////////reset time//////////////////////////////////////////////////////////////////////////////////////////////////
+  N_Tour=0;
+  Start_Time="00:00:00";
+  }
+  reponse="";
+  }
+  else {
+    // kf you didn't get a connection to the server:
+    Serial.println("connection to server failed!!! (°_°)");
+    //Serial.println(Ethernet.localIP());
+  
+  }
+    
+  if (!client.connected()) {
+   
+    Serial.println("Disconnecting from server.");
+    client.stop();
+
+    
+    
+  }
+
+  vTaskResume(blinkhandler);
+    }
+  
+  }
