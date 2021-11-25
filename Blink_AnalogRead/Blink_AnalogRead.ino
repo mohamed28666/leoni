@@ -11,7 +11,7 @@ float diametre_pignon = 0.5;
 bool sending=0;
 //***********************************************CONFIG*******************************************//
 //---just select segment and matched line number ------------------------------------------------//
-String linenumber="MH2/INR-L9";
+String linenumber="MH1/DO-L1";
 const char server[] = "192.168.1.41";
 unsigned long heureRAZmin=8.1e+7,heureRAZmax=heureRAZmin+10000 ;//en millisecondes
 //--- specify ip address for the device---------------------------------------------------------//
@@ -100,7 +100,7 @@ lcd.print("Identifying ip...");
 
 initiate_cnx : 
 // Ethernet.maintain(); 
-Ethernet.begin(mac, ip,DNS, gateway, subnet); 
+//Ethernet.begin(mac, ip,DNS, gateway, subnet); 
 Ethernet.begin(mac, ip); 
  delay(1000);
  Serial.println(Ethernet.localIP());
@@ -533,9 +533,11 @@ delay(80);
  
    timeS=reponse.substring(417,422);
   Serial.println(timeS);
-  if((timeS=="14:00")|(timeS=="14:01")|(timeS=="02:30") |(timeS=="02:31")){ //////////reset time//////////////////////////////////////////////////////////////////////////////////////////////////
+  if((timeS=="14:00")|(timeS=="14:01")|(timeS=="21:27") |(timeS=="21:26")){ //////////reset time//////////////////////////////////////////////////////////////////////////////////////////////////
   N_Tour=0;
   Start_Time="00:00:00";
+  Ethernet.begin(mac, ip); 
+ delay(1000);
   }
   reponse="";
   }
