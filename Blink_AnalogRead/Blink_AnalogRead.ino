@@ -4,7 +4,7 @@
 #include <Ethernet2.h>
 #include <LiquidCrystal.h>
 #include <LiquidCrystal_I2C.h>
-const int RESET = 52;
+const int RESET = 47,RESET_ARD=46;
 int Nombre_de_tour =0;
 int longueur_bretta=2.5,hours=0,minutes=0;
 float diametre_pignon = 0.5;
@@ -65,9 +65,9 @@ LiquidCrystal_I2C lcd(0x27,20,4);
 // the setup function runs once when you press reset or power the board
 void setup() {
     digitalWrite(RESET, HIGH); 
+     digitalWrite(RESET_ARD, HIGH); 
  pinMode(RESET, OUTPUT);  
-    digitalWrite(RESET, HIGH);   
-
+  pinMode(RESET_ARD, OUTPUT);  
    Serial.begin(115200);
   lcd.init();
   lcd.clear();         
@@ -84,7 +84,7 @@ void setup() {
  lcd.setCursor(0,3);
  lcd.print("SVR :"+(String)server);
 delay(2000);
-
+ 
 
  SxBinarySemaphore = xSemaphoreCreateBinary();
   RQUBinarySemaphore= xSemaphoreCreateBinary();
@@ -101,8 +101,13 @@ lcd.print("Identifying ip...");
 initiate_cnx : 
 // Ethernet.maintain(); 
 //Ethernet.begin(mac, ip,DNS, gateway, subnet); 
+ digitalWrite(RESET, LOW);
+   
+  delay(10000);
+  digitalWrite(RESET, HIGH);
+  
 Ethernet.begin(mac, ip); 
- delay(1000);
+ delay(1200);
  Serial.println(Ethernet.localIP());
  current =Ethernet.localIP();
 
@@ -142,13 +147,7 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
     ,  3  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &TASK_Incrimente_Handler );
   
- xTaskCreate(
-  remiseazero
-    ,  "TASK_remiseazero"   // A name N_Tourust for humans
-    ,  500  // This stack size can be checked & adN_Tourusted by reading the Stack Highwater
-    ,  NULL
-    , 2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-    ,  NULL);
+
   
 
 
@@ -156,7 +155,7 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
   xTaskCreate(
     TaskBlink
     ,  "Blink"   // A name just for humans
-    ,  500  // This stack size can be checked & adjusted by reading the Stack Highwater
+    , 500  // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
     , 2// Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &blinkhandler );
@@ -171,19 +170,25 @@ attachInterrupt(digitalPinToInterrupt(sensor), ISRoutine, FALLING);
 xTaskCreate(
     changestate
     ,  "Blink"   // A name just for humans
-    ,  500  // This stack size can be checked & adjusted by reading the Stack Highwater
+    , 500 // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
     ,  2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &changestatehandler);
- 
+
    xTaskCreate(
    LCD_CONTROLLER
     ,  "LCD_CONTROLLER"   // A name N_Tourust for humans
-    ,  500  // This stack size can be checked & adjusted by reading the Stack Highwater
+    , 300 // This stack size can be checked & adjusted by reading the Stack Highwater
     ,  NULL
     ,  2 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &TASK_Test_Handler );
-
+ xTaskCreate(
+  remiseazero
+    ,  "TASK_remiseazero"   // A name N_Tourust for humans
+    ,  500  // This stack size can be checked & adN_Tourusted by reading the Stack Highwater
+    ,  NULL
+    ,3  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  NULL);
 
 }//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -199,7 +204,7 @@ xTaskCreate(
     
 }
 
-
+ 
 
 
 void loop()
@@ -237,7 +242,7 @@ void TaskBlink(void *pvParameters)  // This is a task.
 xSemaphoreTake(RQUBinarySemaphore, portMAX_DELAY);
  // Serial.println("connecting...");
  // client.connect(server, 3333);
-
+Serial.println( "raz blink %i"+(String)uxTaskGetStackHighWaterMark( NULL ));
 if (client.connect(server, 3333)) {
  
     Serial.println("Request is being sent to host server (^_^)");
@@ -254,7 +259,7 @@ if (client.connect(server, 3333)) {
    Serial.println(client.available());
 //while(client.available()==0){Serial.println("stucked here 1111");};
 
-delay(200);
+delay(250);
    
        while (client.available()) {
      
@@ -374,6 +379,7 @@ if((limit>120000)&(N_Tour>0)){
   int clientstatus=client.connect(server,3333);
  // Serial.println("*******yyy***********");
  // Serial.println(clientstatus);
+ Serial.println( "change state task %i"+(String)uxTaskGetStackHighWaterMark( NULL ));
   if (clientstatus) {
 
     Serial.println("Request is being sent to host server (^_^)");
@@ -416,6 +422,7 @@ delay(200);
  };
  start=millis();
   }
+  Serial.println( "blink task %i"+(String)uxTaskGetStackHighWaterMark( NULL ));
  //  vTaskPrioritySet( changestatehandler,2 );
   vTaskResume(blinkhandler);
   
@@ -479,8 +486,11 @@ times = A_Duration;
 
     lcd.setCursor(0,2);
    lcd.print("N_BRETTE: ")  ;
+   
     lcd.setCursor(10,2);
+    
    lcd.print(N_Tour);
+    lcd.print("    ");
  lcd.setCursor(0,3);
    lcd.print("IP:")  ;
     lcd.setCursor(4,3);
@@ -502,11 +512,12 @@ void remiseazero(void){
  for(;;){
   if(N_Tour==0){start=millis();
     Serial.println("start=millis()");}
-delay(30000);
+vTaskDelay(20000 / portTICK_PERIOD_MS);
+Serial.println( "raz task %i"+(String)uxTaskGetStackHighWaterMark( NULL ));
 vTaskSuspend(blinkhandler);
 if (client.connect(server, 3333)) {
  
-    Serial.println("Request is being sent to host server (^_^)");
+    Serial.println("Request is being sent to host server (^_^) from RAZ");
 //Serial.println(elapsed);
 
 
@@ -521,7 +532,7 @@ if (client.connect(server, 3333)) {
 //while(client.available()==0){Serial.println("RAZ task executing");};
 
 Serial.println("RAZ task executing");
-delay(80);
+delay(120);
    
        while (client.available()) {
      
@@ -533,11 +544,19 @@ delay(80);
  
    timeS=reponse.substring(417,422);
   Serial.println(timeS);
-  if((timeS=="14:00")|(timeS=="14:01")|(timeS=="21:27") |(timeS=="21:26")){ //////////reset time//////////////////////////////////////////////////////////////////////////////////////////////////
+  if((timeS=="14:00")|(timeS=="14:01")|(timeS=="05:30") |(timeS=="05:31")|(timeS=="22:15") |(timeS=="22:16")){ //////////reset time//////////////////////////////////////////////////////////////////////////////////////////////////
   N_Tour=0;
   Start_Time="00:00:00";
-  Ethernet.begin(mac, ip); 
+
+  digitalWrite(RESET, LOW);
+   
+  delay(10000);
+  digitalWrite(RESET, HIGH);
+  
+    Ethernet.begin(mac, ip); 
  delay(1000);
+digitalWrite(RESET_ARD, LOW); 
+  
   }
   reponse="";
   }
