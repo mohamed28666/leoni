@@ -284,7 +284,8 @@ delay(250);
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
     //Serial.println(Ethernet.localIP());
-  
+  Ethernet.begin(mac, ip); 
+ delay(1200);
   }
     
     
@@ -401,7 +402,8 @@ delay(200);
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
    // Ethernet.begin(mac,ip);
-
+Ethernet.begin(mac, ip); 
+ delay(1200);
   //   vTaskDelay(3000 / portTICK_PERIOD_MS);
   //  Serial.println(Ethernet.localIP());
     //goto resumehere;
@@ -564,7 +566,8 @@ digitalWrite(RESET_ARD, LOW);
     // kf you didn't get a connection to the server:
     Serial.println("connection to server failed!!! (°_°)");
     //Serial.println(Ethernet.localIP());
-  
+  Ethernet.begin(mac, ip); 
+ delay(1200);
   }
     
   if (!client.connected()) {
